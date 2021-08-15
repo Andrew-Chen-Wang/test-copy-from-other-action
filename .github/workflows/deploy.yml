@@ -1,0 +1,28 @@
+name: Deploy to CDN
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  autoupdate:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout current repository
+      uses: actions/checkout@v2
+    - name: Checkout unitedstates/images
+      uses: actions/checkout@v2
+      with:
+        repository: unitedstates/images
+        path: './unitedstates-images'
+    - name: Add images to current repository
+      run: |
+        mv ./unitedstates-images/congress/450x550 ./rep-images
+        rm -rf ./unitedstates-images
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Autoupdate districts
+        commit_author: GitHub Actions <actions@github.com>
+
